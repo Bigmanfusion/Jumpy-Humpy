@@ -1,139 +1,81 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Bumper : MonoBehaviour
 {
-    Rigidbody2D rb;
-    Animator animator;
-    public Collider2D standingCollider, crouchingCollider;
-    public Transform groundCheckCollider;
-    public Transform overheadCheckCollider;
-    public LayerMask groundLayer;
-    public Transform wallCheckCollider;
-    public LayerMask wallLayer;
+    [SerializeField] private float speed;
+    private Rigidbody2D body;
+    private Animator anim;
+    private bool grounded;
+    private int horizontalInput;
 
-    const float groundCheckRadius = 0.2f;
-    const float overheadCheckRadius = 0.2f;
-    const float wallCheckRadius = 0.2f;
-    [SerializeField] float speed = 2;
-    [SerializeField] float jumpPower = 500;
-    [SerializeField] float slideFactor = 0.2f;
-    public int totalJumps;
-    int availableJumps;
-    float horizontalValue;
-    float runSpeedModifier = 2f;
-
-    bool isGrounded = true;
-    bool isRunning;
-    bool facingRight = true;
-    bool isDead = false;
-
-    void Awake()
+    private void Awake()
     {
-        availableJumps = totalJumps;
-
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+      body = GetComponent<Rigidbody2D>(); 
+        anim = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-      
+        float horizontalInput = Input.GetAxis("Horizontal");
+        body.velocity = new Vector2(horizontalInput * speed, body.velocity.y);
 
-        //Store the horizontal value
-        horizontalValue = Input.GetAxisRaw("Horizontal");
+        float scaleX = this.transform.localScale.x;
+        float scaleY = this.transform.localScale.y;
 
-        //If LShift is clicked enable isRunning
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-            isRunning = true;
-        //If LShift is released disable isRunning
-        if (Input.GetKeyUp(KeyCode.LeftShift))
-            isRunning = false;
+        float faceLeft = scaleX > 0 ? 0 - scaleX : scaleX;
+        float faceRight = scaleX < 0 ? 0 - scaleX : scaleX;
 
-        //If we press Jump button enable jump 
-        if (Input.GetButtonDown("Jump"))
+        if (horizontalInput > 0.01f)
         {
-
+            this.transform.localScale = new Vector2(faceRight, scaleY);
         }
-            
-        //Set the yVelocity Value
-        animator.SetFloat("yVelocity", rb.velocity.y);
-    }
-
-    void FixedUpdate()
-    {
-        GroundCheck();
-        Move(horizontalValue);
-    }
-
-    void GroundCheck()
-    {
-        bool wasGrounded = isGrounded;
-        isGrounded = false;
-        //Check if the GroundCheckObject is colliding with other
-        //2D Colliders that are in the "Ground" Layer
-        //If yes (isGrounded true) else (isGrounded false)
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheckCollider.position, groundCheckRadius, groundLayer);
-        if (colliders.Length > 0)
-            isGrounded= true;
-        
-    }
-
-    void Jump()
-    {
-        if (isGrounded)
+        else if (horizontalInput < -0.01f)
         {
-     
-            availableJumps--;
-
-            rb.velocity = Vector2.up * jumpPower;
-            animator.SetBool("Jump", true);
-        }
-    }
-    void Move(float dir)
-    {
-      
-        #region Move & Run
-        //Set value of x using dir and speed
-        float xVal = dir * speed;
-        //If we are running mulitply with the running modifier (higher)
-        if (isRunning)
-            xVal *= runSpeedModifier;
-        //Create Vec2 for the velocity
-        Vector2 targetVelocity = new Vector2(xVal, rb.velocity.y);
-        //Set the player's velocity
-        rb.velocity = targetVelocity;
-
-        //If looking right and clicked left (flip to the left)
-        if (facingRight && dir < 0)
-        {
-            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            facingRight = false;
-        }
-        //If looking left and press right, turn to the right
-        else if (!facingRight && dir > 0)
-        {
-            transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y, transform.localScale.z);
-            facingRight = true;
+            this.transform.localScale = new Vector2(faceLeft, scaleY);
         }
 
-        //(0 idle , 4 walking , 8 running)
-        //Set the float xVelocity according to the x value 
-        //of the RigidBody2D velocity 
-        animator.SetFloat("xVelocity", Mathf.Abs(rb.velocity.x));
-        #endregion
+        if (Input.GetKeyDown(KeyCode.Space))
+            body.velocity = new Vector2(body.velocity.x, speed);
+
+        if(Input.GetKeyDown(KeyCode.Space) && grounded)
+                Jump();
+
+        anim.SetBool("Walk", horizontalInput != 0);
+        anim.SetBool("grounded", grounded);
+
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            Jump();
+
+        if (Input.GetKeyUp(KeyCode.Space) && body.velocity.y > 0)
+            body.velocity = new Vector2(body.velocity.x, body.velocity.y / 2);
+
+
     }
 
-    public void Die()
+    private void Jump()
     {
-        isDead = true;
-        FindObjectOfType<LevelManager>().Restart();
+        body.velocity = new Vector2(body.velocity.x, speed);
+        //anim.SetTrigger("jump");
+        grounded = false;
     }
 
-    public void ResetPlayer()
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        isDead = false;
+        if (collision.gameObject.tag == "Ground")
+            grounded = true;
     }
+
+    public bool canAttack()
+    {
+        return horizontalInput == 0 && grounded;
+    }
+
+
+
+
 
 }

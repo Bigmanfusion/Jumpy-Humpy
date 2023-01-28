@@ -119,10 +119,10 @@ TextureImporter:
       name: Bumper_0
       rect:
         serializedVersion: 2
-        x: 3
-        y: 22
+        x: 2
+        y: 2
         width: 25
-        height: 33
+        height: 30
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,8 +140,8 @@ TextureImporter:
       name: Bumper_1
       rect:
         serializedVersion: 2
-        x: 32
-        y: 28
+        x: 31
+        y: 8
         width: 22
         height: 24
       alignment: 0
@@ -161,8 +161,8 @@ TextureImporter:
       name: Bumper_2
       rect:
         serializedVersion: 2
-        x: 55
-        y: 27
+        x: 54
+        y: 7
         width: 22
         height: 25
       alignment: 0
@@ -182,8 +182,8 @@ TextureImporter:
       name: Bumper_3
       rect:
         serializedVersion: 2
-        x: 78
-        y: 27
+        x: 77
+        y: 7
         width: 21
         height: 25
       alignment: 0
@@ -203,8 +203,8 @@ TextureImporter:
       name: Bumper_4
       rect:
         serializedVersion: 2
-        x: 103
-        y: 27
+        x: 102
+        y: 7
         width: 30
         height: 26
       alignment: 0
@@ -224,8 +224,8 @@ TextureImporter:
       name: Bumper_5
       rect:
         serializedVersion: 2
-        x: 134
-        y: 27
+        x: 133
+        y: 7
         width: 24
         height: 27
       alignment: 0
@@ -245,8 +245,8 @@ TextureImporter:
       name: Bumper_6
       rect:
         serializedVersion: 2
-        x: 163
-        y: 27
+        x: 162
+        y: 7
         width: 25
         height: 26
       alignment: 0
@@ -266,8 +266,8 @@ TextureImporter:
       name: Bumper_7
       rect:
         serializedVersion: 2
-        x: 189
-        y: 27
+        x: 188
+        y: 7
         width: 24
         height: 26
       alignment: 0
@@ -287,8 +287,8 @@ TextureImporter:
       name: Bumper_8
       rect:
         serializedVersion: 2
-        x: 214
-        y: 27
+        x: 213
+        y: 7
         width: 24
         height: 26
       alignment: 0
@@ -304,6 +304,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: Bumper_9
+      rect:
+        serializedVersion: 2
+        x: 242
+        y: 8
+        width: 23
+        height: 22
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 52f2c2f89712fae42bd756e15df7e68c
+      internalID: 1681801943
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -315,6 +336,7 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
+      Bumper_9: 1681801943
       Bumper_4: 829299223
       Bumper_5: 1189538436
       Bumper_7: -1511099109
